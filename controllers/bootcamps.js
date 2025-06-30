@@ -13,7 +13,9 @@ exports.getBootcamps = asyncHandler(
  
     let query;
 
-    let queryStr = JSON.stringify(req.query);
+    const reqQuery = {...req.query };
+
+    let queryStr = JSON.stringify(reqQuery);
 
       queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
