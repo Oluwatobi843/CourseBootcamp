@@ -33,6 +33,9 @@ app.use("/api/v1/bootcamps", bootcamps);
 // Error Handler
 app.use(errorHandler);
 
+
+// PORT of Entry
+
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () =>
