@@ -15,9 +15,6 @@ connectDB();
 const bootcamps = require("./routes/bootcamps");
 
 const app = express();
-   
-// Hello world
-let john = "were";
 
 // Body parser
 app.use(express.json());
