@@ -2,37 +2,37 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middleware/async');
 const geocoder = require('../utils/geocoder');
 const Bootcamp = require('../models/Bootcamp');
+const qs = require('qs');
 
 
 
 // @desc Get all bootcamps
 // @route GET /api/v1/bootcamps
 // @access Public
-exports.getBootcamps = asyncHandler(
-  async (req, res, next) => {
- 
-    let query;
-
-    // const reqQuery = {...req.query };
-
-    let queryStr = JSON.stringify(req.query);
-
-      queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
-
-      console.log(queryStr)
-
-    query = Bootcamp.find(JSON.parse(queryStr));
-
-    
-    const bootcamps = await query;
-
-    res  
-      .status(200)
-      .json({ success: true, count: bootcamps.length, data: bootcamps });
 
 
-}
-)
+exports.getBootcamps = asyncHandler(async (req, res, next) => {
+  // Parse raw query string properly
+  const parsedQuery = qs.parse(req._parsedUrl.query);
+
+  // Convert query operators
+  let queryStr = JSON.stringify(parsedQuery);
+  queryStr = queryStr.replace(
+    /\b(gt|gte|lt|lte|in)\b/g,
+    (match) => `$${match}`
+  );
+  const mongoQuery = JSON.parse(queryStr);
+
+  const bootcamps = await Bootcamp.find(mongoQuery);
+
+  res.status(200).json({
+    success: true,
+    count: bootcamps.length,
+    data: bootcamps,
+  });
+});
+
+
 
 // @desc Get a single bootcamp
 // @route GET /api/v1/bootcamps/:id
