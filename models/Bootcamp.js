@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const slugify = require("slugify");
 const geocoder = require("../utils/geocoder");
 
-
 const BootcampSchema = new mongoose.Schema(
   {
     name: {
@@ -13,7 +12,7 @@ const BootcampSchema = new mongoose.Schema(
       maxlength: [50, "Name can not be more than 50 characters"],
     },
     slug: String,
-    description: { 
+    description: {
       type: String,
       required: [true, "Please add a description"],
       maxlength: [500, "Description can not be more than 500 characters"],
@@ -41,7 +40,6 @@ const BootcampSchema = new mongoose.Schema(
       required: [true, "Please add an address"],
     },
     location: {
-      // GeoJSON Point
       type: {
         type: String,
         enum: ["Point"],
@@ -58,7 +56,6 @@ const BootcampSchema = new mongoose.Schema(
       country: String,
     },
     careers: {
-      // Array of strings
       type: [String],
       required: true,
       enum: [
@@ -112,30 +109,32 @@ const BootcampSchema = new mongoose.Schema(
   }
 );
 
-// Create bootcamp slug from the name 
+// Create bootcamp slug from the name
 BootcampSchema.pre("save", function (next) {
   this.slug = slugify(this.name, { lower: true });
   next();
 });
 
-// // Geocode & create location field
-// BootcampSchema.pre("save", async function (next) {
-//   const loc = await geocoder.geocode(this.address);
-//   this.location = {
-//     type: "Point",
-//     coordinates: [loc[0].longitude, loc[0].latitude],
-//     formattedAddress: loc[0].formattedAddress,
-//     street: loc[0].streetName,
-//     city: loc[0].city,
-//     state: loc[0].stateCode,
-//     zipcode: loc[0].zipcode,
-//     country: loc[0].countryCode,
-//   };
+// Geocode & create location field
+BootcampSchema.pre("save", async function (next) {
+  const loc = await geocoder.geocode(this.address);
 
-// // //   // Do not save address in DB
-//   this.address = undefined;
-//   next();
-// });
+  this.location = {
+    type: "Point",
+    coordinates: [loc[0].longitude, loc[0].latitude],
+    formattedAddress: loc[0].formattedAddress,
+    street: loc[0].streetName,
+    city: loc[0].city,
+    state: loc[0].stateCode,
+    zipcode: loc[0].zipcode,
+    country: loc[0].countryCode,
+  };
+
+  // Optional: if you don't want to store the raw address in DB
+  // this.address = undefined;
+
+  next(); // ✅ 
+});
 
 // // Cascade delete courses when a bootcamp is deleted
 // BootcampSchema.pre("remove", async function (next) {
@@ -152,4 +151,4 @@ BootcampSchema.pre("save", function (next) {
 //   justOne: false,
 // });
 
-module.exports = mongoose.model("Bootcamp", BootcampSchema)
+module.exports = mongoose.model("Bootcamp", BootcampSchema);
