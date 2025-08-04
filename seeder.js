@@ -20,7 +20,7 @@ const importData = async () => {
   try {
       await Bootcamp.create(bootcamps);
 
-      console.log('Data Imported....'.green.inverse);
+      console.log('Data Imported...'.green.inverse);
   } catch (err) {
     console.error(err);
   }
@@ -31,7 +31,7 @@ const deleteData = async () => {
   try {
       await Bootcamp.deleteMany();
 
-      console.log('Data Destroy....'.red.inverse);
+      console.log('Data Destroyed...'.red.inverse);
   } catch (err) {
     console.error(err);
   }

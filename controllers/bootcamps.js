@@ -13,11 +13,13 @@ exports.getBootcamps = asyncHandler(
  
     let query;
 
-    const reqQuery = {...req.query };
+    // const reqQuery = {...req.query };
 
-    let queryStr = JSON.stringify(reqQuery);
+    let queryStr = JSON.stringify(req.query);
 
       queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+
+      console.log(queryStr)
 
     query = Bootcamp.find(JSON.parse(queryStr));
 
