@@ -45,4 +45,9 @@ process.on("unhandledRejection", (err, promise) => {
   // Close server & exit process
   server.close(() => process.exit(1));
 });
+
+
+  
+// GEOCODER_PROVIDER=mapquest
+// GEOCODER_API_KEY=80255771ffc34ec49372393747fc77a4
   
