@@ -12,6 +12,19 @@ const qs = require('qs');
 
 
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
+    let query;
+
+  // copy req.query
+  const reqQuery = {...req.reqQuery}
+
+  // Field to exclude
+  const removeFields = ['select'];
+
+  // Loop over removefield and delete them from reqQuery
+  removeFields.forEach(param => delete reqQuery[param]);
+
+  console.log(reqQuery);   
+
   // Parse raw query string properly
   const parsedQuery = qs.parse(req._parsedUrl.query);
 
@@ -21,8 +34,12 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     /\b(gt|gte|lt|lte|in)\b/g,
     (match) => `$${match}`
   );
+
+  // finding resources
   const mongoQuery = JSON.parse(queryStr);
 
+
+  // exscuting query
   const bootcamps = await Bootcamp.find(mongoQuery);
 
   res.status(200).json({
