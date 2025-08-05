@@ -11,29 +11,33 @@ const qs = require('qs');
 // @access Public
 
 
-
-
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  let query;
-
-  // Corrected: copy req.query
-  const reqQuery = { ...req.query };
-
   // Fields to exclude
   const removeFields = ["select"];
 
-  //Loop Over Remove unwanted fields from query
-  removeFields.forEach((param) => delete reqQuery[param]);
-
-  // console.log("Raw req.query:", req.query);
-  console.log("Cleaned reqQuery:", reqQuery);
-
-  // Use qs to parse nested query params
+  // Parse nested query using qs
   const parsedQuery = qs.parse(req._parsedUrl.query);
 
-  // console.log("Parsed Query:", parsedQuery); 
+  // Remove excluded fields
+  removeFields.forEach((param) => delete parsedQuery[param]);
 
-  // Convert operators
+  // Convert 'true'/'false' strings to boolean (recursively)
+  const convertBooleans = (obj) => {
+    for (const key in obj) {
+      if (typeof obj[key] === "object") {
+        convertBooleans(obj[key]);
+      } else {
+        if (obj[key] === "true") obj[key] = true;
+        if (obj[key] === "false") obj[key] = false;
+      }
+    }
+  };
+  convertBooleans(parsedQuery);
+
+  // Log cleaned query
+  console.log("Parsed Query:", parsedQuery);
+
+  // Convert Mongo operators
   let queryStr = JSON.stringify(parsedQuery);
   queryStr = queryStr.replace(
     /\b(gt|gte|lt|lte|in)\b/g,
@@ -41,10 +45,11 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   );
 
   const mongoQuery = JSON.parse(queryStr);
-  console.log("Mongo Query:", mongoQuery);
+  console.log("Final Mongo Query:", mongoQuery);
 
-  // Find resources
+  // Query the database
   const bootcamps = await Bootcamp.find(mongoQuery);
+  console.log("Matched Bootcamps:", bootcamps);
 
   res.status(200).json({
     success: true,
@@ -52,6 +57,8 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
     data: bootcamps,
   });
 });
+
+
 
 
 
