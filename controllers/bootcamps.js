@@ -5,23 +5,17 @@ const Bootcamp = require('../models/Bootcamp');
 const qs = require('qs');
 
 
-
-// @desc Get all bootcamps
-// @route GET /api/v1/bootcamps
-// @access Public
-
-
+// @desc    Get all bootcamps
+// @route   GET /api/v1/bootcamps
+// @access  Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
-  // Fields to exclude
   const removeFields = ["select"];
-
-  // Parse nested query using qs
   const parsedQuery = qs.parse(req._parsedUrl.query);
 
-  // Remove excluded fields
+  // Remove unwanted fields
   removeFields.forEach((param) => delete parsedQuery[param]);
 
-  // Convert 'true'/'false' strings to boolean (recursively)
+  // Convert string booleans to actual booleans
   const convertBooleans = (obj) => {
     for (const key in obj) {
       if (typeof obj[key] === "object") {
@@ -34,20 +28,22 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   };
   convertBooleans(parsedQuery);
 
-  // Log cleaned query
-  console.log("Parsed Query:", parsedQuery);
+  // Expand dot notation into nested objects
+  const expandedQuery = expandDotNotation(parsedQuery);
 
-  // Convert Mongo operators
-  let queryStr = JSON.stringify(parsedQuery);
+  // Convert MongoDB operators
+  let queryStr = JSON.stringify(expandedQuery);
   queryStr = queryStr.replace(
     /\b(gt|gte|lt|lte|in)\b/g,
     (match) => `$${match}`
   );
-
   const mongoQuery = JSON.parse(queryStr);
+
+  // Log for debugging
+  console.log("Parsed Query:", parsedQuery);
   console.log("Final Mongo Query:", mongoQuery);
 
-  // Query the database
+  // Execute query
   const bootcamps = await Bootcamp.find(mongoQuery);
   console.log("Matched Bootcamps:", bootcamps);
 
@@ -58,6 +54,28 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   });
 });
 
+// Helper function to expand dot-notation keys
+function expandDotNotation(obj) {
+  const result = {};
+  for (const key in obj) {
+    if (key.includes(".")) {
+      const parts = key.split(".");
+      let nested = result;
+      for (let i = 0; i < parts.length; i++) {
+        if (!nested[parts[i]]) nested[parts[i]] = {};
+        if (i === parts.length - 1) {
+          nested[parts[i]] = obj[key];
+        } else {
+          nested = nested[parts[i]];
+        }
+      }
+    } else {
+      result[key] = obj[key];
+    }
+  }
+  return result;
+}
+ 
 
 
 
