@@ -101,7 +101,7 @@ const BootcampSchema = new mongoose.Schema(
     //   type: mongoose.Schema.ObjectId,
     //   ref: "User",
     //   required: true,
-    // },
+    // }, user is commented
   },
   {
     toJSON: { virtuals: true },
