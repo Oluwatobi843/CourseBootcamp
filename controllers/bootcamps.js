@@ -54,28 +54,7 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   });
 });
 
-// Helper function to expand dot-notation keys
-function expandDotNotation(obj) {
-  const result = {};
-  for (const key in obj) {
-    if (key.includes(".")) {
-      const parts = key.split(".");
-      let nested = result;
-      for (let i = 0; i < parts.length; i++) {
-        if (!nested[parts[i]]) nested[parts[i]] = {};
-        if (i === parts.length - 1) {
-          nested[parts[i]] = obj[key];
-        } else {
-          nested = nested[parts[i]];
-        }
-      }
-    } else {
-      result[key] = obj[key];
-    }
-  }
-  return result;
-}
- 
+
 
 
 
