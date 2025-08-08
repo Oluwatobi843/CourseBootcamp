@@ -81,32 +81,23 @@ const qs = require('qs');
 // @route   GET /api/v1/bootcamps
 // @access  Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
+  let query;
 
-  
-  const removeFields = ["select"];
-  const parsedQuery = qs.parse(req._parsedUrl.query);
+  // Copy req.query
+  const reqQuery = { ...req.query};
 
-  // Remove unwanted fields
-  removeFields.forEach((param) => delete parsedQuery[param]);
+  // Field to exclude
+  const removeFields = ['select'];
 
-  // Convert string booleans to actual booleans
-  const convertBooleans = (obj) => {
-    for (const key in obj) {
-      if (typeof obj[key] === "object") {
-        convertBooleans(obj[key]);
-      } else {
-        if (obj[key] === "true") obj[key] = true;
-        if (obj[key] === "false") obj[key] = false;
-      }
-    }
-  };
-  convertBooleans(parsedQuery);
+  // Loop over removeField  and delete them from reqQuery
+  removeFields.forEach(param => delete reqQuery[param]);
 
-  // Expand dot notation into nested objects
-  const expandedQuery = expandDotNotation(parsedQuery);
+  console.log(reqQuery);
 
-  // Convert MongoDB operators
-  let queryStr = JSON.stringify(expandedQuery);
+  // Create query string
+  let queryStr = JSON.stringify(reqQuery);
+
+// Create operators ($gt, $gte, etc)
   queryStr = queryStr.replace(
     /\b(gt|gte|lt|lte|in)\b/g,
     (match) => `$${match}`
