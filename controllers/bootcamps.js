@@ -201,7 +201,7 @@ exports.deleteBootcamp = asyncHandler( async (req, res, next) => {
   // @desc Upload Photo for bootcamp
 // @route PUT /api/v1/bootcamps/:id/photo
 // @access Private
-exports.deleteBootcamp = asyncHandler( async (req, res, next) => {
+exports.bootcampPhotoUpload = asyncHandler( async (req, res, next) => {
   
     const bootcamp = await Bootcamp.findById(req.params.id)
   
@@ -211,10 +211,9 @@ exports.deleteBootcamp = asyncHandler( async (req, res, next) => {
       ); 
     }
   
-    // bootcamp.deleteOne();
-    bootcamp.deleteOne()
-
-    res.status(200).json({ success: true,  data: {} });
+    if(!req.files){
+      return next(new ErrorResponse(`Please Upload a file`, 400))
+    }
   
   });
 
