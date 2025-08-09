@@ -11,12 +11,7 @@ const qs = require('qs');
 // @access  Public
 exports.getBootcamps = asyncHandler(async (req, res, next) => {
 
-  res.status(200).json({
-    success: true,
-    count: bootcamps.length,
-    pagination: pagination,
-    data: bootcamps,
-  });
+  res.status(200).json(res.advancedResults);
 });
 
 
