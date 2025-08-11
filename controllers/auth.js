@@ -5,7 +5,7 @@ const User = require("../models/User");
 
 
 // @desc    Register user
-// @route   GET /api/v1/auth/register
+// @route   POST /api/v1/auth/register
 // @access  Public
 
 exports.register = asyncHandler(async (req, res, next) => {
@@ -17,5 +17,45 @@ exports.register = asyncHandler(async (req, res, next) => {
     name, email, password, role
   });
 
-  res.status(200).json({ success: true})
+  // Create token
+  const token = user.getSignedJwtToken();
+
+  res.status(200).json({ success: true, token: token})
+}) 
+
+
+
+// @desc    Login user
+// @route   POST /api/v1/auth/login
+// @access  Public
+
+exports.register = asyncHandler(async (req, res, next) => {
+
+  const { email, password} = req.body;
+
+//  Validate email and pssword
+if (!email || !password ){
+    return next(new ErrorResponse('Please provide an email and password', 400));
+
+}
+// check for user
+
+const user = await user.findOne({ email}).select('+password');
+
+if(!user){
+   return next(new ErrorResponse("Invalid Credentials", 401));
+}
+
+// Check if password matches 
+
+const isMatch = await user.matchPassword(password);
+
+if(!isMatch){
+   return next(new ErrorResponse("Invalid Credentials", 401));
+}
+
+  // Create token
+  const token = user.getSignedJwtToken();
+
+  res.status(200).json({ success: true, token: token})
 }) 
