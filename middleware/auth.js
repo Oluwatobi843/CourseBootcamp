@@ -7,9 +7,12 @@ const User = require('../models/User');
 exports.protect = asyncHandler(async (req, res, next ) => {
   let token;
 
-  if(req.headers.authorization && req.headers.authorization.startWith('Bearer')
+  if(
+    req.headers.authorization &&
+     req.headers.authorization.startsWith('Bearer')
+
   ) {
-    token = req.header.authorization.split(' ')[1];
+    token = req.headers.authorization.split(' ')[1];
   }
 
   // else if (req.cookies.token){
@@ -27,10 +30,10 @@ exports.protect = asyncHandler(async (req, res, next ) => {
 
     console.log(decoded)
 
-    request.user = await User.findById(decoded.id);
+    req.user = await User.findById(decoded.id);
 
     next();
   } catch (err) {
-    
+    return next( new ErrorResponse("Not authorize to access this route", 401));
   }
 })
