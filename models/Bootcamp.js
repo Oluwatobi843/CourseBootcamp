@@ -132,7 +132,7 @@ BootcampSchema.pre("save", async function (next) {
   // Optional: if you don't want to store the raw address in DB
   // this.address = undefined;
 
-  next(); // ✅ 
+  next(); // 
 });
 
 // // Cascade delete courses when a bootcamp is deleted
