@@ -130,11 +130,11 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
 // @desc Delete bootcamp
 // @route DELETE /api/v1/bootcamps/:id
 // @access Private
-exports.deleteBootcamp = asyncHandler( async (req, res, next) => {
+exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
   const bootcamp = await Bootcamp.findById(req.params.id);
 
   if (!bootcamp) {
-    next(
+    return next(
       new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
     );
   }
@@ -149,8 +149,8 @@ exports.deleteBootcamp = asyncHandler( async (req, res, next) => {
     );
   }
 
-  // bootcamp.deleteOne();
-  bootcamp.remove();             
+  // ✅ Use deleteOne instead of remove
+  await bootcamp.deleteOne();
 
   res.status(200).json({ success: true, data: {} });
 });
