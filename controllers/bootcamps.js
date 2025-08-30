@@ -190,51 +190,57 @@ exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
 // @route PUT /api/v1/bootcamps/:id/photo
 // @access Private
 exports.bootcampPhotoUpload = asyncHandler( async (req, res, next) => {
-  
-    const bootcamp = await Bootcamp.findById(req.params.id)
-  
-    if (!bootcamp) {
-      next(
-        new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
-      ); 
+  const bootcamp = await Bootcamp.findById(req.params.id);
+
+  if (!bootcamp) {
+    next(
+      new ErrorResponse(`Bootcamp not found with id of ${req.params.id}`, 404)
+    );
+  }
+
+  // Make sure user is bootcamp owner
+  if (bootcamp.user.toString() !== req.user.id && req.user.role !== "admin") {
+    return next(
+      new ErrorResponse(
+        `User ${req.user.id} is not authorized to delete this bootcamp`,
+        401
+      )
+    );
+  } 
+
+  if (!req.files) {
+    return next(new ErrorResponse(`Please Upload a file`, 400));
+  }
+  const file = req.files.file;
+
+  // Make sure the image is a photo
+  if (!file.mimetype.startsWith("image")) {
+    return next(new ErrorResponse(`Please Upload an image file`, 400));
+  }
+
+  // Check file size
+  if (file.size > process.env.MAX_FILE_UPLOAD) {
+    return next(
+      new ErrorResponse(
+        `Please Upload an image less than ${process.env.MAX_FILE_UPLOAD}`,
+        400
+      )
+    );
+  }
+
+  // Create cutom file name
+  file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`;
+
+  file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
+    if (err) {
+      return next(new ErrorResponse(`Problem with file upload`, 500));
     }
-  
-    if(!req.files){
-      return next(new ErrorResponse(`Please Upload a file`, 400));
-    }
-    const file = req.files.file
+    await Bootcamp.findByIdAndUpdate(req.params.id, { photo: file.name });
 
-    // Make sure the image is a photo
-    if(!file.mimetype.startsWith('image')){
-      return next(new ErrorResponse(`Please Upload an image file`, 400));
-    }
-
-    // Check file size
-    if(file.size > process.env.MAX_FILE_UPLOAD){
-      return next(new ErrorResponse(`Please Upload an image less than ${process.env.MAX_FILE_UPLOAD}`, 400));
-    }
-
-    // Create cutom file name
-    file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`;
-
-    file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async err => {
-      if(err){
-        return next(
-          new ErrorResponse(
-            `Problem with file upload`,
-            500
-          )
-        );
-      }
-      await Bootcamp.findByIdAndUpdate(req.params.id, { photo: file.name })
-
-      res.status(200).json({
-        success: true,
-        data: file.name
-
-      });
+    res.status(200).json({
+      success: true,
+      data: file.name,
     });
-
-  
   });
+});
 
