@@ -69,7 +69,7 @@ exports.getMe = asyncHandler (async (req, res, next) =>{
       success: true,
       data: user
     })
-})
+})               
 
 
 // @desc    Forgot password
@@ -96,7 +96,7 @@ exports.forgotPassword = asyncHandler (async (req, res, next) =>{
     try {
       await sendEmail({
         email: user.email,
-        subject: 'Password reset token', 
+        subject: 'Password reset token',    
         message
       });
 
