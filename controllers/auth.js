@@ -108,9 +108,9 @@ exports.forgotPassword = asyncHandler (async (req, res, next) =>{
 
       await user.save({ validateBeforeSave: false });
 
-      return next( new ErrorResponse('Email could not be sent', 500 ));
+      return next( new ErrorResponse('Email could not   be sent', 500 ));
     }
-
+  
     res.status(200).json({
       success: true,
       data: user
