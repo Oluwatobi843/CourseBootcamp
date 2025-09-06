@@ -18,21 +18,9 @@ const ReviewSchema = new mongoose.Schema({
       type: Number,
       min: 1,
       max: 10,
-      required: [true, 'Please add number of weeks']
+      required: [true, 'Please add a rating between 1 and 10']
     },
-    tuition: {
-      type: Number,
-      required: [true, 'Please add a tuition cost']
-    },
-    minimumSkill: {
-      type: String,
-      required: [true, 'Please add a minimum skill'],
-      enum: ['beginner', 'intermediate', 'advanced']
-    },
-    scholarshipAvailable: {
-      type: Boolean,
-      default: false
-    },
+
     createdAt: {
       type: Date,
       default: Date.now
