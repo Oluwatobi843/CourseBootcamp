@@ -17,7 +17,8 @@ connectDB();
 // Route files
 const bootcamps = require("./routes/bootcamps");
 const courses = require("./routes/courses");
-const auth = require('./routes/auth')
+const auth = require('./routes/auth');
+const users = require('./routes/users');        
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use("/api/v1/bootcamps", bootcamps);
 app.use("/api/v1/courses", courses);
 app.use("/api/v1/auth", auth);
+app.use("/api/v1/users", users);
 
 // Error Handler
 app.use(errorHandler); 
@@ -66,4 +68,5 @@ process.on("unhandledRejection", (err, promise) => {
   
 // GEOCODER_PROVIDER=mapquest
 // GEOCODER_API_KEY=80255771ffc34ec49372393747fc77a4
-  
+                             
+                                                                                                  
