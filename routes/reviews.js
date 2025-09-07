@@ -14,7 +14,7 @@ const { protect, authorize } = require("../middleware/auth");
 router
   .route("/")
   .get(
-    advancedResults(Course, {
+    advancedResults(Review, {
       path: "bootcamp",
       select: "name description",
     }),
