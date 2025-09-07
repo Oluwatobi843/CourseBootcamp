@@ -18,9 +18,9 @@ router
       path: "bootcamp",
       select: "name description",
     }),
-    getCourses
+    getReviews        
   )
-  .post(protect, authorize("publisher", "admin"), addCourse);
+  
 
 router
   .route("/:id")
