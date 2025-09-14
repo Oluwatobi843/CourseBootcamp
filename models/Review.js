@@ -38,11 +38,6 @@ const ReviewSchema = new mongoose.Schema({
       required: true
     }
      
-      
-
-
-
-    
   });
    
 
