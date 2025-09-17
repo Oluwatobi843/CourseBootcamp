@@ -84,6 +84,5 @@ ReviewSchema.statics.getAverageRating = async function(bootcampId){
   })  
   
 
-  
   module.exports = mongoose.model('Review', ReviewSchema);
       
