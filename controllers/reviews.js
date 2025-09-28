@@ -76,7 +76,7 @@ exports.addReview = asyncHandler(async (req, res, next) => {
 // @route   PUT /api/v1/reviews/:id
 // @access  Private
 
-exports.updateReview = asyncHandler(async (req, res, next)   => {
+exports.updateReview = asyncHandler(async (req, res, next) => {
   let review = await Review.findById(req.params.id);
 
   if(!review){
