@@ -39,7 +39,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(fileupload());
 
 // Sanitize data
-app.use(mongoSanitize());
+app.use(mongoSanitize());   
 
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')))
