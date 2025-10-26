@@ -7,6 +7,7 @@ const colors = require('colors');
 const fileupload = require('express-fileupload');
 const cookieParser = require('cookie-parser');
 const mongoSanitize = require("express-mongo-sanitize"); 
+const helmet = require("helmet"); 
 const errorHandler = require('./middleware/error');
 
 // Load env vars
