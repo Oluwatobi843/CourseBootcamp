@@ -1,33 +1,37 @@
 # CourseBootcamp API
 
-> A backend API for a course/bootcamp discovery platform, demonstrating REST API development, MongoDB persistence, authentication and layered API security.
+> REST API for discovering and managing bootcamp-style courses, built with Node.js, Express and MongoDB.
 
 ## Overview
 
-CourseBootcamp is a Node.js/Express backend project for managing bootcamp-style course data and related user workflows. It demonstrates practical API engineering with MongoDB, authentication, validation, security middleware, file handling, email and geolocation capabilities.
+CourseBootcamp is a backend API project that demonstrates practical REST API engineering around course/bootcamp resources and related user workflows. It combines MongoDB persistence with authentication, request validation, security middleware, file handling, email delivery and geolocation capabilities.
 
-## Technology Stack
+## Key features
 
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- JWT
-- bcrypt
-- Express Validator
-- Helmet
-- CORS
-- Rate limiting
-- HPP protection
-- XSS protection
-- NoSQL injection sanitization
-- File upload
-- Email delivery
-- Geocoding
+- Course/bootcamp resource management
+- User authentication and authorization foundations
+- JWT-based authentication
+- Password hashing with bcrypt
+- Request validation
+- File upload support
+- Email integration
+- Geolocation/geocoding capabilities
+- Security middleware and API hardening
+- MongoDB persistence through Mongoose
 
-## Security
+## Technology stack
 
-The API applies multiple defensive middleware layers, including security headers, rate limiting, validation and protection against common web/API attacks.
+| Area | Technology |
+|---|---|
+| Runtime | Node.js |
+| Framework | Express.js |
+| Database | MongoDB |
+| ODM | Mongoose |
+| Authentication | JWT |
+| Password security | bcrypt |
+| Validation | Express Validator |
+| Security | Helmet, rate limiting, HPP, XSS/NoSQL protections |
+| Integrations | File upload, email, geocoding |
 
 ## Architecture
 
@@ -38,16 +42,38 @@ Client
 Express REST API
   |
   +--> Authentication
-  +--> Course / Bootcamp workflows
+  +--> Bootcamp/Course workflows
   +--> Validation
-  +--> File / Email services
+  +--> File services
+  +--> Email services
   +--> Geolocation
   |
   v
-MongoDB / Mongoose
+Mongoose
+  |
+  v
+MongoDB
 ```
 
-## Local Development
+The project uses middleware to keep cross-cutting concerns such as authentication, validation and security separate from route handlers and business workflows.
+
+## Security
+
+The API demonstrates a defense-in-depth approach using:
+
+- HTTP security headers
+- Rate limiting
+- Request validation
+- HPP protection
+- XSS protection
+- NoSQL-injection sanitization
+- Password hashing
+- JWT authentication
+- CORS configuration
+
+Production deployments should additionally use secure secrets management, HTTPS, restricted database access and environment-specific configuration.
+
+## Installation
 
 ```bash
 git clone https://github.com/Oluwatobi843/CourseBootcamp.git
@@ -55,22 +81,68 @@ cd CourseBootcamp
 npm install
 ```
 
-Configure the environment variables expected by the project, then run its development/start script.
+Configure the environment variables expected by the application before starting the API. Keep credentials and private configuration out of source control.
 
-## Engineering Value
+## Running locally
 
-This project demonstrates **REST API architecture, MongoDB, JWT authentication, backend security, middleware design, file uploads, email integration and geolocation**.
+Use the development/start command configured by the project:
 
-## Future Improvements
+```bash
+npm run dev
+```
+
+or:
+
+```bash
+npm start
+```
+
+## API development approach
+
+A typical request follows this path:
+
+```text
+HTTP request
+   |
+   v
+Security middleware
+   |
+   v
+Validation / authentication
+   |
+   v
+Route controller
+   |
+   v
+Business logic
+   |
+   v
+Mongoose model
+   |
+   v
+MongoDB
+```
+
+This structure makes the API easier to reason about and provides clear boundaries for future testing and feature expansion.
+
+## Engineering value
+
+CourseBootcamp demonstrates a strong foundation in **Node.js backend development, REST API design, MongoDB, authentication, security middleware and third-party service integration**.
+
+It also represents useful progression toward the more modular NestJS architecture used in newer backend projects.
+
+## Roadmap
 
 - OpenAPI/Swagger documentation
-- Automated integration tests
-- Docker
-- CI/CD
-- Advanced authorization policies
-- Production observability
+- Automated unit and integration tests
+- Docker support
+- CI/CD pipeline
+- More granular authorization policies
+- Production logging and observability
+- Improved API versioning
 
 ## Author
 
-**Oluwatobi843**  
-https://github.com/Oluwatobi843
+**Oluwatobi843**
+
+GitHub: https://github.com/Oluwatobi843
